@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-07",
+  "input": "student_35.vcf",
+  "assembly": "GRCh38",
+  "vep": {
+    "resource": "Ensembl VEP REST API",
+    "endpoint": "https://rest.ensembl.org/vep/human/id",
+    "method": "POST, rsID identifiers",
+    "parameters": {
+      "symbol": 1,
+      "canonical": 1,
+      "mane": 1,
+      "hgvs": 1,
+      "numbers": 1,
+      "sift": 1,
+      "polyphen": 1,
+      "af_gnomade": 1,
+      "af_gnomadg": 1,
+      "clin_sig": 1,
+      "clin_sig_allele": 1
+    },
+    "raw_output": "vep.json",
+    "all_transcripts_output": "vep_transcripts.tsv"
+  },
+  "clinvar": {
+    "resource": "NCBI ClinVar E-utilities",
+    "search": "db=clinvar; input rsIDs and VCV accessions from VEP combined with OR; retmax=500; retmode=json",
+    "summary": "db=clinvar; ESummary for every search hit; retmode=json",
+    "allele_matching": "GRCh38 canonical SPDI must match input position, REF and ALT",
+    "raw_output": "clinvar.json"
+  },
+  "gnomad": {
+    "resource": "gnomAD GraphQL API",
+    "endpoint": "https://gnomad.broadinstitute.org/api",
+    "dataset": "gnomad_r4",
+    "variant_id_format": "CHROM-POS-REF-ALT (GRCh38)",
+    "fields": "variant_id, rsid, chrom, pos, ref, alt, exome/genome AC, AN, AF",
+    "raw_output": "gnomad.json"
+  },
+  "transcript_selection_rule": [
+    "Only transcript consequences for the exact input ALT allele",
+    "Most severe consequence according to the Ensembl consequence ranking",
+    "For equal severity prefer MANE Select, then MANE Plus Clinical, then canonical, then protein_coding, then lexicographically smallest transcript ID"
+  ],
+  "summary_output": "annotated.tsv"
+}
